@@ -1,19 +1,28 @@
 package com.taskapp.controller;
 
-import org.springframework.stereotype.Controller;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskapp.model.UserModel;
+import com.taskapp.repository.UserMongoRepository;
+
 @RestController
-@RequestMapping("/finally")
+@RequestMapping("/user")
 public class UserController {
 	
-	@RequestMapping(value = "/retrieve", method = RequestMethod.GET)
-	public @ResponseBody String printHelloWorld() {
+	@Autowired
+	UserMongoRepository userrepo;
+	
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public @ResponseBody JSONObject createUser(@RequestBody UserModel usermodel) {
 		System.out.println("hello pls print");
-		return "Hello World";
+		userrepo.save(usermodel);
+		return null;
 	}
 	
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
