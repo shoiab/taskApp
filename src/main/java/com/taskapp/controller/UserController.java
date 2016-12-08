@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +16,6 @@ import com.taskapp.service.data.DataService;
 import com.taskapp.utils.Md5Encryptor;
 
 @RestController
-@EnableRedisHttpSession
 @RequestMapping("/user")
 public class UserController {
 	

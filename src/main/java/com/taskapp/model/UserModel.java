@@ -1,9 +1,6 @@
 package com.taskapp.model;
 
-import java.io.Serializable;
 import java.util.Date;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 public class UserModel{
 
