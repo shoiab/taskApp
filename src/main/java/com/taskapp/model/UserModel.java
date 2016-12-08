@@ -1,14 +1,16 @@
 package com.taskapp.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="UserCollection")
-public class UserModel {
+public class UserModel{
+
 	private String name;
 	private String email;
 	private Date dateOfCreation;
+	private String password;
 	public String getName() {
 		return name;
 	}
@@ -27,6 +29,11 @@ public class UserModel {
 	public void setDateOfCreation(Date dateOfCreation) {
 		this.dateOfCreation = dateOfCreation;
 	}
-	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 }

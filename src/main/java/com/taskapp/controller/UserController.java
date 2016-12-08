@@ -1,7 +1,11 @@
 package com.taskapp.controller;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,26 +13,38 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taskapp.model.UserModel;
-import com.taskapp.repository.UserMongoRepository;
+import com.taskapp.service.data.DataService;
+import com.taskapp.utils.Md5Encryptor;
 
 @RestController
+@EnableRedisHttpSession
 @RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
-	UserMongoRepository userrepo;
+	private Md5Encryptor encoder;
+	
+	@Autowired
+	DataService dataservice;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public @ResponseBody JSONObject createUser(@RequestBody UserModel usermodel) {
-		System.out.println("hello pls print");
-		userrepo.save(usermodel);
-		return null;
+	public @ResponseBody HttpStatus createUser(@RequestBody UserModel usermodel) throws NoSuchAlgorithmException {
+		dataservice.saveUser(usermodel);
+		return HttpStatus.OK;
 	}
 	
-	@RequestMapping(value = "/find", method = RequestMethod.GET)
-	public @ResponseBody String printSomething() {
-		System.out.println("hello pls print for find");
-		return "What the heck man!!";
+	@RequestMapping(value = "/auth", method = RequestMethod.POST)
+	public @ResponseBody JSONObject authenticate(@RequestBody UserModel usermodel) throws NoSuchAlgorithmException {
+		/*UserModel model = userrepo.findByEmail(usermodel.getEmail());
+		System.out.println("password :: "+model.getEmail() + " , " + model.getPassword());
+		
+		if(encoder.encryptPassword(usermodel.getPassword()).equals(model.getPassword())){
+			System.out.println("Authenticated");
+		}*/
+		
+		return null;
+		
+		
 	}
 
 }
