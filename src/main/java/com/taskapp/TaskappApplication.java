@@ -55,5 +55,4 @@ public class TaskappApplication{
 		return new MongoClient(env.getProperty("mongo.url"), Integer.valueOf(env.getProperty("mongo.port")));
 		
 	}
-	
 }

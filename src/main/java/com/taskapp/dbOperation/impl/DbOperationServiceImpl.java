@@ -42,7 +42,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 	}
 
 	@Override
-	public boolean authenticate(JSONObject auth) {
+	public UserModel getUserObj(String email) {
 		MongoDatabase db = mongoClient.getDatabase(environment
 				.getProperty("mongo.dataBase"));
 
@@ -50,15 +50,15 @@ public class DbOperationServiceImpl implements DbOperationService {
 				environment.getProperty("mongo.userCollection"),
 				BasicDBObject.class);
 		BasicDBObject whereQuery = new BasicDBObject();
-		whereQuery.put("email", auth.get("email"));
-		whereQuery.put("password", auth.get("password"));
+		whereQuery.put("email", email);
 
 		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		UserModel userModel = new UserModel();
 		if (obj.first() != null) {
-			return true;
+			userModel = (UserModel) (new Gson()).fromJson(obj.first().toString(),
+					UserModel.class);
 		}
-		
-		return false;
+		return userModel;
 	}
 
 }

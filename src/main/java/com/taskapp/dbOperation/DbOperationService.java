@@ -7,6 +7,6 @@ import com.taskapp.model.UserModel;
 public interface DbOperationService {
 	public void saveUser(UserModel usermodel);
 
-	public boolean authenticate(JSONObject auth);
+	public UserModel getUserObj(String email);
 
 }
