@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.taskapp.model.UserModel;
 import com.taskapp.service.data.DataService;
-import com.taskapp.utils.Md5Encryptor;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	
-	@Autowired
-	private Md5Encryptor encoder;
 	
 	@Autowired
 	DataService dataservice;
@@ -32,17 +28,8 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
-	public @ResponseBody JSONObject authenticate(@RequestBody UserModel usermodel) throws NoSuchAlgorithmException {
-		/*UserModel model = userrepo.findByEmail(usermodel.getEmail());
-		System.out.println("password :: "+model.getEmail() + " , " + model.getPassword());
-		
-		if(encoder.encryptPassword(usermodel.getPassword()).equals(model.getPassword())){
-			System.out.println("Authenticated");
-		}*/
-		
-		return null;
-		
-		
+	public @ResponseBody boolean authenticate(@RequestBody JSONObject auth) throws NoSuchAlgorithmException {
+		return dataservice.authenticate(auth);
 	}
 
 }

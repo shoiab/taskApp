@@ -1,7 +1,6 @@
 package com.taskapp;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,15 +11,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import com.mongodb.MongoClient;
 
 @EnableSwagger2
 @SpringBootApplication
@@ -47,15 +44,7 @@ public class TaskappApplication{
 
 	@Bean(name = "dataSourceClient")
 	public MongoClient dataSource() {
-		/*
-		 * return new MongoClient(env.getProperty("mongo.url"),
-		 * Integer.valueOf(env.getProperty("mongo.port")));
-		 */
-
-		/*String mongoUserName = env.getProperty("mongo.userName");
-
-		String mongoPassword = env.getProperty("mongo.password");*/
-
+		
 		String host = env.getProperty("mongo.url").toString();
 
 		Object portOb = env.getProperty("mongo.port");
@@ -63,11 +52,8 @@ public class TaskappApplication{
 
 		String db = env.getProperty("mongo.dataBase").toString();
 
-		/*if (mongoPassword == null) {*/
-			return new MongoClient(env.getProperty("mongo.url"), Integer.valueOf(env.getProperty("mongo.port")));
-		/*}*/
-		/*MongoCredential credential = MongoCredential.createCredential(mongoUserName, db, mongoPassword.toCharArray());
-		MongoClient client = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential));
-		return client;*/
+		return new MongoClient(env.getProperty("mongo.url"), Integer.valueOf(env.getProperty("mongo.port")));
+		
 	}
+	
 }
