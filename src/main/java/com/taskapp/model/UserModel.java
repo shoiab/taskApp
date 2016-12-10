@@ -8,6 +8,14 @@ public class UserModel{
 	private String email;
 	private Date dateOfCreation;
 	private String password;
+	public UserModel(String name, String email) {
+		super();
+		this.name = name;
+		this.email = email;
+	}
+	public UserModel() {
+		
+	}
 	public String getName() {
 		return name;
 	}

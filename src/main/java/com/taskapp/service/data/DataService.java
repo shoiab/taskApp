@@ -10,4 +10,8 @@ public interface DataService {
 	public void saveUser(UserModel usermodel) throws NoSuchAlgorithmException;
 
 	public boolean authenticate(JSONObject auth);
+	
+	public UserModel getUser( final String key );
+	
+	public void setUser( final UserModel usermodel);
 }
