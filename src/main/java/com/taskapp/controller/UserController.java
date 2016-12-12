@@ -121,4 +121,14 @@ public class UserController {
 		return docsans;
 	}
 	
+	@RequestMapping(value = "/deleteIndex", method = RequestMethod.POST)
+	public void deleteindex(@RequestParam (value = "name") String name) throws NoSuchAlgorithmException, SolrServerException, IOException {
+		String solrUrl = "http://localhost:8983/solr/taskapp";
+
+		HttpSolrClient server = new HttpSolrClient(solrUrl);
+		server.deleteByQuery("name:"+name);
+		server.commit();
+		server.close();
+	}
+	
 }
