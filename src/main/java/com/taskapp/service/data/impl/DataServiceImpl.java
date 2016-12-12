@@ -47,12 +47,12 @@ public class DataServiceImpl implements DataService {
 	}
 
 	@Override
-	public JSONObject authenticate(UserModel model) throws ParseException {
+	public JSONObject authenticate(JSONObject userobj) throws ParseException {
 		
 		HttpStatus httpstatus = null;
-		UserModel user = dbservice.getUserObj(model.getEmail());
+		UserModel user = dbservice.getUserObj((String)userobj.get("email"));
 		
-		boolean authStatus = encryptor.compareWithEncryptText(model.getPassword(), user.getPassword());
+		boolean authStatus = encryptor.compareWithEncryptText((String)userobj.get("password"), user.getPassword());
 		JSONObject authResponse = new JSONObject();
 		
 		

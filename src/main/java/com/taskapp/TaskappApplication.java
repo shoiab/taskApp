@@ -2,6 +2,8 @@ package com.taskapp;
 
 import java.time.LocalDate;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -77,4 +79,11 @@ public class TaskappApplication {
 				Object.class));
 		return template;
 	}
+	
+	@PreDestroy
+    public static void shutDownMethod() {
+		/*final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+		template.setConnectionFactory(jedisConnectionFactory());
+		template.discard();*/
+    }
 }

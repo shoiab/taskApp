@@ -10,7 +10,7 @@ import com.taskapp.model.UserModel;
 public interface DataService {
 	public void saveUser(UserModel usermodel) throws NoSuchAlgorithmException;
 
-	public JSONObject authenticate(UserModel auth) throws ParseException;
+	public JSONObject authenticate(JSONObject userobj) throws ParseException;
 	
 	public JSONObject getUser( final String key );
 	
