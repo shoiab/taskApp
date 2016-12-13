@@ -31,9 +31,8 @@ public class SearchManagerImpl implements SearchHandler {
 		HttpSolrClient server = new HttpSolrClient(solrUrl);
 		SolrInputDocument userdoc = new SolrInputDocument();
 
-		userdoc.addField("tagName", usermodel.getName());
-		userdoc.addField("tagValue", usermodel.getEmail());
-		userdoc.addField("tagType", Constants.TAG_TYPE_USER);
+		userdoc.addField("userName", usermodel.getName());
+		userdoc.addField("userEmail", usermodel.getEmail());
 
 		server.add(userdoc);
 		server.commit();
