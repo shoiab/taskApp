@@ -49,7 +49,7 @@ public class SearchManagerImpl implements SearchHandler {
 		SolrDocumentList docsans = new SolrDocumentList();
 		SolrQuery solrQuery = new SolrQuery();
 		solrQuery.setQuery(searchVal + "*");
-		solrQuery.setFields("tagName", "tagValue");
+		solrQuery.setFields("tagName", "tagType", "tagValue");
 		QueryResponse rsp = server.query(solrQuery, METHOD.POST);
 		docsans = rsp.getResults();
 		System.out.println(docsans);
@@ -61,13 +61,12 @@ public class SearchManagerImpl implements SearchHandler {
 	@Override
 	public void deleteTag(String fieldName, String fieldValue)
 			throws SolrServerException, IOException {
-
-		String solrUrl = env.getProperty(Constants.SOLR_URL);
-		HttpSolrClient server = new HttpSolrClient(solrUrl);
-		server.deleteByQuery(fieldName + ":" + fieldValue);
-		server.commit();
-		server.close();
-
+		
+			String solrUrl = env.getProperty(Constants.SOLR_URL);
+			HttpSolrClient server = new HttpSolrClient(solrUrl);
+			server.deleteByQuery(fieldName + ":" + fieldValue);
+			server.commit();
+			server.close();
 	}
 
 	@Override

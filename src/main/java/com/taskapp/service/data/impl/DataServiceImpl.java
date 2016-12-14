@@ -115,8 +115,9 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public void deleteTag(String fieldName, String fieldValue)
 			throws SolrServerException, IOException {
-		solrService.deleteTag(fieldName, fieldValue);
-		
+		if(fieldName.equalsIgnoreCase("tagName")){
+			solrService.deleteTag(fieldName, fieldValue);
+		}
 	}
 
 	@Override
