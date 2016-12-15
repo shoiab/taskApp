@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import com.google.gson.Gson;
+import com.taskapp.constants.Constants;
 import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.UserModel;
 import com.taskapp.service.data.DataService;
@@ -51,6 +52,7 @@ public class DataServiceImpl implements DataService {
 		usermodel.setPassword(encryptUserPassword);
 		dbservice.saveUser(usermodel);
 		solrService.indexuser(usermodel);
+		createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail());
 		return HttpStatus.OK;
 	}
 
