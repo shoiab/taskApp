@@ -2,8 +2,6 @@ package com.taskapp;
 
 import java.time.LocalDate;
 
-import javax.annotation.PreDestroy;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +15,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -25,13 +25,14 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import com.mongodb.MongoClient;
+import com.taskapp.interceptor.RequestProcessingInterceptor;
 
 @EnableSwagger2
 @SpringBootApplication
 @ComponentScan({ "com.taskapp" })
 @PropertySource({ "classpath:persistence-mongo.properties" })
 @Configuration
-public class TaskappApplication {
+public class TaskappApplication extends WebMvcConfigurerAdapter{
 
 	public static void main(String[] args) {
 		SpringApplication.run(TaskappApplication.class, args);
@@ -80,10 +81,9 @@ public class TaskappApplication {
 		return template;
 	}
 	
-	@PreDestroy
-    public static void shutDownMethod() {
-		/*final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
-		template.setConnectionFactory(jedisConnectionFactory());
-		template.discard();*/
-    }
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		System.out.println("interceptors");
+		registry.addInterceptor(new RequestProcessingInterceptor()).excludePathPatterns("/api/taskapp/user/**");
+	}
 }

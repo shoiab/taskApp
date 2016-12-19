@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocumentList;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,6 +22,7 @@ import com.taskapp.constants.Constants;
 import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.UserModel;
 import com.taskapp.service.data.DataService;
+import com.taskapp.service.data.TagService;
 import com.taskapp.solr.SearchHandler;
 import com.taskapp.utils.Encrypt;
 import com.taskapp.utils.UUIDGeneratorForUser;
@@ -44,25 +44,30 @@ public class DataServiceImpl implements DataService {
 	
 	@Autowired
 	private SearchHandler solrService;
+	
+	@Autowired
+	private TagService tagservice;
 
 	@Override
 	public HttpStatus saveUser(UserModel usermodel) throws NoSuchAlgorithmException, SolrServerException, IOException {
 		String encryptUserPassword = encryptor.textEncrypt(usermodel
 				.getPassword());
 		usermodel.setPassword(encryptUserPassword);
-		dbservice.saveUser(usermodel);
-		solrService.indexuser(usermodel);
-		createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail());
-		return HttpStatus.OK;
+		HttpStatus status = dbservice.saveUser(usermodel);
+		if(status != HttpStatus.FOUND){
+			//solrService.indexuser(usermodel);
+			tagservice.createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail());
+		}
+		return status;
 	}
 
 	@Override
 	public JSONObject authenticate(JSONObject userobj) throws ParseException {
 		
 		HttpStatus httpstatus = null;
-		UserModel user = dbservice.getUserObj((String)userobj.get("email"));
+		UserModel user = dbservice.getUserObj(userobj.get("email").toString());
 		
-		boolean authStatus = encryptor.compareWithEncryptText((String)userobj.get("password"), user.getPassword());
+		boolean authStatus = encryptor.compareWithEncryptText(userobj.get("password").toString(), user.getPassword());
 		JSONObject authResponse = new JSONObject();
 		
 		
@@ -91,7 +96,7 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public JSONObject getUser(final String uuid) {
 
-		final Jedis jedis = new Jedis("localhost");
+		final Jedis jedis = new Jedis();
 		JSONObject redisobj = new JSONObject();
 
 		Map<Object, Object> userobj = new HashMap<Object, Object>();
@@ -110,23 +115,11 @@ public class DataServiceImpl implements DataService {
 	}
 
 	@Override
-	public SolrDocumentList fetchTag(String searchVal) throws SolrServerException, IOException {
-		return solrService.fetchTag(searchVal);
-	}
-
-	@Override
-	public void deleteTag(String fieldName, String fieldValue)
-			throws SolrServerException, IOException {
-		if(fieldName.equalsIgnoreCase("tagName")){
-			solrService.deleteTag(fieldName, fieldValue);
-		}
-	}
-
-	@Override
-	public void createTag(String tagName, String tagType, String tagValue)
-			throws SolrServerException, IOException {
-		solrService.createTag(tagName, tagType, tagValue);
-		
+	public JSONObject changePassword(UserModel usermodel, String auth_key) {
+		String encryptUserPassword = encryptor.textEncrypt(usermodel.getPassword());
+		dbservice.updateUserPassword(encryptUserPassword, usermodel.getEmail());
+		template.delete(auth_key);
+		return null;
 	}
 
 }

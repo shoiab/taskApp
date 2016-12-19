@@ -2,6 +2,9 @@ package com.taskapp.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 public class UserModel{
 
 	private String name;
@@ -28,9 +31,13 @@ public class UserModel{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	@JsonIgnore
 	public Date getDateOfCreation() {
 		return dateOfCreation;
 	}
+	
+	@JsonIgnore
 	public void setDateOfCreation(Date dateOfCreation) {
 		this.dateOfCreation = dateOfCreation;
 	}

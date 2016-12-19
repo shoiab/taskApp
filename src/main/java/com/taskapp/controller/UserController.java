@@ -2,9 +2,9 @@ package com.taskapp.controller;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocumentList;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,17 @@ public class UserController {
 	DataService dataservice;
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
-	public @ResponseBody HttpStatus createUser(@RequestBody UserModel usermodel)
+	public @ResponseBody HttpStatus createUser(@RequestBody UserModel usermodel
+			/*@RequestParam(value = "name") String name,
+			@RequestParam(value = "email") String email,
+			@RequestParam(value = "password") String password*/)
 			throws NoSuchAlgorithmException, SolrServerException, IOException {
-		return dataservice.saveUser(usermodel);
+		UserModel userobj = new UserModel();
+		userobj.setName(usermodel.getName());
+		userobj.setEmail(usermodel.getEmail());
+		userobj.setPassword(usermodel.getPassword());
+		userobj.setDateOfCreation(new Date());
+		return dataservice.saveUser(userobj);
 	}
 
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
@@ -43,42 +51,24 @@ public class UserController {
 		userobj.put("password", password);
 		return dataservice.authenticate(userobj);
 	}
+	
+	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+	public @ResponseBody JSONObject changePassword(
+			@RequestHeader(value = "auth_key") String auth_key,
+			@RequestParam(value = "email") String email,
+			@RequestParam (value = "newPassword") String newPassword)
+			throws NoSuchAlgorithmException, ParseException {
+		UserModel usermodel = new UserModel();
+		usermodel.setEmail(email);
+		usermodel.setPassword(newPassword);
+		return dataservice.changePassword(usermodel, auth_key);
+	}
 
 	@RequestMapping(value = "/getuserfromcache", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getUserFromCache(
-			@RequestHeader(value = "key") String auth_key)
+			@RequestHeader(value = "auth_key") String auth_key)
 			throws NoSuchAlgorithmException {
 		return dataservice.getUser(auth_key);
 	}
-
-	@RequestMapping(value = "/tags", method = RequestMethod.POST)
-	public void addTag(@RequestParam(value = "tagName") String tagName,
-			@RequestParam(value = "tagType") String tagType,
-			@RequestParam(value = "tagValue") String tagValue)
-			throws NoSuchAlgorithmException, SolrServerException, IOException {
-		dataservice.createTag(tagName, tagType, tagValue);
-		
-	}
-
-	@RequestMapping(value = "/tags", method = RequestMethod.GET)
-	public @ResponseBody SolrDocumentList getindex(
-			@RequestParam(value = "search") String searchVal)
-			throws NoSuchAlgorithmException, SolrServerException, IOException {
-		
-		return dataservice.fetchTag(searchVal);
-
-	}
-
-	@RequestMapping(value = "/tags", method = RequestMethod.DELETE)
-	public void deleteindex(
-			@RequestParam(value = "fieldName") String fieldName,
-			@RequestParam(value = "fieldValue") String fieldValue)
-			throws NoSuchAlgorithmException, SolrServerException, IOException {
-		dataservice.deleteTag(fieldName, fieldValue);
-	}
-	
-	
-	
-	/*@RequestMapping(value = "/createTagType", method = Req)*/
 
 }

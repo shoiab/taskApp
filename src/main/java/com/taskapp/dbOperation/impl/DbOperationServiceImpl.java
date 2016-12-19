@@ -1,8 +1,9 @@
 package com.taskapp.dbOperation.impl;
 
-import org.json.simple.JSONObject;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 import com.taskapp.dbOperation.DbOperationService;
+import com.taskapp.model.TagModel;
 import com.taskapp.model.UserModel;
 
 @Service
@@ -25,7 +27,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 	private MongoClient mongoClient;
 
 	@Override
-	public void saveUser(UserModel usermodel) {
+	public HttpStatus saveUser(UserModel usermodel) {
 		MongoDatabase db = mongoClient.getDatabase(environment
 				.getProperty("mongo.dataBase"));
 
@@ -34,10 +36,20 @@ public class DbOperationServiceImpl implements DbOperationService {
 				BasicDBObject.class);
 
 		Gson gson = new Gson();
-
-		BasicDBObject basicobj = (BasicDBObject) JSON.parse(gson
-				.toJson(usermodel));
-		coll.insertOne(basicobj);
+		
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("email", usermodel.getEmail());
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		
+		if (obj.first() == null) {
+			BasicDBObject basicobj = (BasicDBObject) JSON.parse(gson
+					.toJson(usermodel));
+			
+			coll.insertOne(basicobj);
+			return HttpStatus.OK;
+		}else{
+			return HttpStatus.FOUND;
+		}
 
 	}
 
@@ -59,6 +71,52 @@ public class DbOperationServiceImpl implements DbOperationService {
 					UserModel.class);
 		}
 		return userModel;
+	}
+
+	@Override
+	public void createTag(String name, String tagTypeUser, String email) {
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.tagCollection"),
+				BasicDBObject.class);
+		
+		TagModel tagmodel = new TagModel();
+		tagmodel.setTagName(name);
+		tagmodel.setTagType(tagTypeUser);
+		tagmodel.setTagValue(email);
+		Gson gson = new Gson();
+		BasicDBObject basicobj = (BasicDBObject) JSON.parse(gson
+				.toJson(tagmodel));
+		
+		coll.insertOne(basicobj);
+		
+	}
+
+	@Override
+	public void updateUserPassword(String encryptUserPassword, String email) {
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.userCollection"),
+				BasicDBObject.class);
+
+		//Gson gson = new Gson();
+		
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("email", email);
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		
+		if(obj.first() != null){
+			Document newDocument = new Document();
+			Document searchQuery = new Document().append("email",email);
+			newDocument.put("$set", new BasicDBObject("password", encryptUserPassword));
+			coll.updateOne(searchQuery, newDocument);
+		}
+		
+		
 	}
 
 }
