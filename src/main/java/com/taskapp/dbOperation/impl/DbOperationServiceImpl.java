@@ -1,6 +1,8 @@
 package com.taskapp.dbOperation.impl;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 	private MongoClient mongoClient;
 
 	@Override
-	public HttpStatus saveUser(UserModel usermodel) {
+	public JSONObject saveUser(UserModel usermodel) {
 		MongoDatabase db = mongoClient.getDatabase(environment
 				.getProperty("mongo.dataBase"));
 
@@ -37,19 +39,28 @@ public class DbOperationServiceImpl implements DbOperationService {
 				BasicDBObject.class);
 
 		Gson gson = new Gson();
+		JSONObject json = new JSONObject();
 		
 		BasicDBObject whereQuery = new BasicDBObject();
 		whereQuery.put("email", usermodel.getEmail());
 		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
 		
+		BasicDBObject basicUserObj = (BasicDBObject) JSON.parse(gson
+				.toJson(usermodel));
 		if (obj.first() == null) {
-			BasicDBObject basicUserObj = (BasicDBObject) JSON.parse(gson
-					.toJson(usermodel));
 			
 			coll.insertOne(basicUserObj);
-			return HttpStatus.OK;
+			ObjectId id = basicUserObj.getObjectId("_id");
+			json.put("HTTPStatus", HttpStatus.OK);
+			json.put("Id",id);
+			return json;
+			
 		}else{
-			return HttpStatus.FOUND;
+			
+			ObjectId id = basicUserObj.getObjectId("_id");
+			json.put("HTTPStatus", HttpStatus.FOUND);
+			json.put("Id",id);
+			return json;
 		}
 
 	}
@@ -119,7 +130,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 	}
 
 	@Override
-	public HttpStatus createGroup(GroupModel groupmodel) {
+	public JSONObject createGroup(GroupModel groupmodel) {
 		MongoDatabase db = mongoClient.getDatabase(environment
 				.getProperty("mongo.dataBase"));
 
@@ -129,18 +140,25 @@ public class DbOperationServiceImpl implements DbOperationService {
 
 		Gson gson = new Gson();
 		
+		JSONObject json = new JSONObject();
+		
 		BasicDBObject whereQuery = new BasicDBObject();
 		whereQuery.put("groupName", groupmodel.getGroupName());
 		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
 		
+		BasicDBObject basicGroupObj = (BasicDBObject) JSON.parse(gson
+				.toJson(groupmodel));
+		
 		if (obj.first() == null) {
-			BasicDBObject basicGroupObj = (BasicDBObject) JSON.parse(gson
-					.toJson(groupmodel));
 			
 			coll.insertOne(basicGroupObj);
-			return HttpStatus.OK;
+			json.put("HTTPStatus", HttpStatus.OK);
+			json.put("id", basicGroupObj.get("id"));
+			return json;
 		}else{
-			return HttpStatus.FOUND;
+			json.put("HTTPStatus", HttpStatus.FOUND);
+			json.put("id", basicGroupObj.get("id"));
+			return json;
 		}
 	}
 

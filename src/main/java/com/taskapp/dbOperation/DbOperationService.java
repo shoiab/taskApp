@@ -1,13 +1,14 @@
 package com.taskapp.dbOperation;
 
 
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 
 import com.taskapp.model.GroupModel;
 import com.taskapp.model.UserModel;
 
 public interface DbOperationService {
-	public HttpStatus saveUser(UserModel usermodel);
+	public JSONObject saveUser(UserModel usermodel);
 
 	public UserModel getUserObj(String email);
 
@@ -15,6 +16,6 @@ public interface DbOperationService {
 
 	public void updateUserPassword(String encryptUserPassword, String email);
 
-	public HttpStatus createGroup(GroupModel groupmodel);
+	public JSONObject createGroup(GroupModel groupmodel);
 
 }

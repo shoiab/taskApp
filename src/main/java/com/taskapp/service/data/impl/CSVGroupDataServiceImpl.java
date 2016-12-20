@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,12 +30,12 @@ public class CSVGroupDataServiceImpl implements CSVGroupDataService{
 		groupmodel.setDateOfCreation(new Date());
 		groupmodel.setGroupName(groupName);
 		groupmodel.setGroupMailList(emails);
-		HttpStatus status = dbservice.createGroup(groupmodel);
-		if(status == HttpStatus.OK){
-			solrService.createTag(groupName, Constants.TAG_TYPE_GROUP, emails);
+		JSONObject group = dbservice.createGroup(groupmodel);
+		if(group.get("HTTPStatus") == HttpStatus.OK){
+			solrService.createTag(groupName, Constants.TAG_TYPE_GROUP, emails, Constants.TAG_TYPE_ID);
 			dbservice.createTag(groupName, Constants.TAG_TYPE_GROUP, emails);
 		}
-		return status;
+		return (HttpStatus) group.get("HTTPStatus");
 	}
 
 }

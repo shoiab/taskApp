@@ -31,10 +31,20 @@ public class TagServiceImpl implements TagService{
 	}*/
 
 	@Override
-	public void createTag(String tagName, String tagType, String tagValue)
+	public void createTag(String tagName, String tagType, String tagValue, String id)
 			throws SolrServerException, IOException {
-		solrService.createTag(tagName, tagType, tagValue);
+		solrService.createTag(tagName, tagType, tagValue, id);
 		
+	}
+
+	@Override
+	public SolrDocumentList getAllUsers() throws SolrServerException, IOException {
+		return solrService.getAllUsers();
+	}
+
+	@Override
+	public SolrDocumentList getAllGroups() throws SolrServerException, IOException {
+		return solrService.getAllGroups();
 	}
 
 }

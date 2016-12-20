@@ -47,6 +47,24 @@ public class TagController {
 		return tagservice.fetchTag(searchVal, searchField);
 
 	}
+	
+	@RequestMapping(value= "/getAllUsers", method = RequestMethod.GET)
+	public @ResponseBody SolrDocumentList getAllUsers(
+			@RequestHeader(value = "auth_key") String auth_key)
+			throws NoSuchAlgorithmException, SolrServerException, IOException {
+
+		return tagservice.getAllUsers();
+
+	}
+	
+	@RequestMapping(value= "/getAllGroups", method = RequestMethod.GET)
+	public @ResponseBody SolrDocumentList getAllGroups(
+			@RequestHeader(value = "auth_key") String auth_key)
+			throws NoSuchAlgorithmException, SolrServerException, IOException {
+
+		return tagservice.getAllGroups();
+
+	}
 
 	/*
 	 * @RequestMapping(method = RequestMethod.DELETE) public void

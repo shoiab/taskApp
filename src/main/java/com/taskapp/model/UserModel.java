@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class UserModel{
-
+	
+	private String id;
 	private String name;
 	private String email;
 	private Date dateOfCreation;
@@ -30,6 +31,14 @@ public class UserModel{
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	@JsonIgnore
+	public String getId() {
+		return id;
+	}
+	@JsonIgnore
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	@JsonIgnore

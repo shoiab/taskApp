@@ -1,10 +1,19 @@
 package com.taskapp.model;
 
 public class TagModel {
+	private String id;
 	private String tagName;
 	private String tagType;
 	private String tagValue;
+	
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	public String getTagName() {
 		return tagName;
 	}

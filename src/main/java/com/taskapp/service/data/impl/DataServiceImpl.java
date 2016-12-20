@@ -53,12 +53,12 @@ public class DataServiceImpl implements DataService {
 		String encryptUserPassword = encryptor.textEncrypt(usermodel
 				.getPassword());
 		usermodel.setPassword(encryptUserPassword);
-		HttpStatus status = dbservice.saveUser(usermodel);
-		if(status != HttpStatus.FOUND){
+		JSONObject userobj = dbservice.saveUser(usermodel);
+		if(userobj.get("HTTPStatus") != HttpStatus.FOUND){
 			//solrService.indexuser(usermodel);
-			tagservice.createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail());
+			tagservice.createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail(), (String)userobj.get("id"));
 		}
-		return status;
+		return (HttpStatus) userobj.get("HTTPStatus");
 	}
 
 	@Override

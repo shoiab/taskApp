@@ -78,7 +78,7 @@ public class SearchManagerImpl implements SearchHandler {
 	}
 
 	@Override
-	public void createTag(String tagName, String tagType, String tagValue)
+	public void createTag(String tagName, String tagType, String tagValue, String id)
 			throws SolrServerException, IOException {
 		String solrUrl = env.getProperty(Constants.SOLR_URL);
 
@@ -88,11 +88,53 @@ public class SearchManagerImpl implements SearchHandler {
 		tagdoc.addField("tagName", tagName);
 		tagdoc.addField("tagType", tagType);
 		tagdoc.addField("tagValue", tagValue);
+		tagdoc.addField("id", id);
 
 		server.add(tagdoc);
 		server.commit();
 		server.close();
 
+	}
+
+	@Override
+	public SolrDocumentList getAllUsers() throws SolrServerException, IOException {
+		String solrUrl = env.getProperty(Constants.SOLR_URL);
+		HttpSolrClient server = new HttpSolrClient(solrUrl);
+		SolrDocumentList docsans = new SolrDocumentList();
+		SolrQuery solrQuery = new SolrQuery();
+		solrQuery
+				.setQuery("tagType:(" + Constants.TAG_TYPE_USER + ")");
+		//solrQuery.setFields("tagName", "tagType", "tagValue");
+		/*solrQuery.setFields("tagValue");*/
+
+		QueryResponse rsp = server.query(solrQuery, METHOD.GET);
+		System.out.println("query = " + solrQuery.toString());
+		docsans = rsp.getResults();
+		System.out.println(docsans);
+
+		server.close();
+		return docsans;
+	}
+
+	@Override
+	public SolrDocumentList getAllGroups() throws SolrServerException,
+			IOException {
+		String solrUrl = env.getProperty(Constants.SOLR_URL);
+		HttpSolrClient server = new HttpSolrClient(solrUrl);
+		SolrDocumentList docsans = new SolrDocumentList();
+		SolrQuery solrQuery = new SolrQuery();
+		solrQuery
+				.setQuery("tagType:(" + Constants.TAG_TYPE_GROUP + ")");
+		//solrQuery.setFields("tagName", "tagType", "tagValue");
+		/*solrQuery.setFields("tagValue");*/
+
+		QueryResponse rsp = server.query(solrQuery, METHOD.GET);
+		System.out.println("query = " + solrQuery.toString());
+		docsans = rsp.getResults();
+		System.out.println(docsans);
+
+		server.close();
+		return docsans;
 	}
 
 }

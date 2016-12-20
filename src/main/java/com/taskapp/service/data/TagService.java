@@ -11,6 +11,10 @@ public interface TagService {
 
 	/*public void deleteTag(String fieldName, String fieldValue) throws SolrServerException, IOException;*/
 
-	public void createTag(String tagName, String tagType, String tagValue) throws SolrServerException, IOException;
+	public void createTag(String tagName, String tagType, String tagValue, String id) throws SolrServerException, IOException;
+
+	public SolrDocumentList getAllUsers() throws SolrServerException, IOException;
+
+	public SolrDocumentList getAllGroups() throws SolrServerException, IOException;
 
 }

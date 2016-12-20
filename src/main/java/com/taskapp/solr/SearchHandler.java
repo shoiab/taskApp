@@ -15,6 +15,10 @@ public interface SearchHandler {
 
 	void deleteTag(String fieldName, String fieldValue) throws SolrServerException, IOException;
 
-	void createTag(String tagName, String tagType, String tagValue) throws SolrServerException, IOException;
+	void createTag(String tagName, String tagType, String tagValue, String id) throws SolrServerException, IOException;
+
+	SolrDocumentList getAllUsers() throws SolrServerException, IOException;
+
+	SolrDocumentList getAllGroups() throws SolrServerException, IOException;
 
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,9 @@ public class CSVUserDataServiceImpl implements CSVUserDataService{
 		for(UserModel usermodel : userlist){
 			String encryptedPassword = encryptor.textEncrypt(usermodel.getPassword());
 			usermodel.setPassword(encryptedPassword); 
-			HttpStatus status = dbservice.saveUser(usermodel);
-			if(status != HttpStatus.FOUND){
-				solrService.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail());
+			JSONObject status = dbservice.saveUser(usermodel);
+			if(status.get("HTTPStatus") != HttpStatus.FOUND){
+				solrService.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail(), Constants.TAG_TYPE_ID);
 				dbservice.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail());
 			}			
 		}
