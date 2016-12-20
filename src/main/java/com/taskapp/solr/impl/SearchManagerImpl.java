@@ -54,8 +54,8 @@ public class SearchManagerImpl implements SearchHandler {
 						+ "tagType:(" + searchField + ")) OR " + "(tagName:("
 						+ "*" + searchVal + "*" + ") AND " + "tagType:("
 						+ searchField + "))");
-		//solrQuery.setFields("tagName", "tagType", "tagValue");
-		solrQuery.setFields("tagValue");
+		solrQuery.setFields("tagName", "tagType", "tagValue");
+		//solrQuery.setFields("tagName","tagValue");
 
 		QueryResponse rsp = server.query(solrQuery, METHOD.POST);
 		System.out.println("query = " + solrQuery.toString());
