@@ -24,13 +24,10 @@ public class RequestProcessingInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) {
 		long startTime = System.currentTimeMillis();
-		System.out.println("inside interceptor");
 
 		if (!request.getRequestURI().equals("/api/taskapp/user/**")) {
 
-			System.out.println("hello interceptor");
 			String auth_key = request.getHeader("auth_key");
-			System.out.println("auth_key :: " + auth_key);
 
 			Jedis jedis = new Jedis("localhost", 6379);
 			jedis.connect();

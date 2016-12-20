@@ -28,17 +28,21 @@ public class UserController {
 	DataService dataservice;
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
-	public @ResponseBody HttpStatus createUser(@RequestBody UserModel usermodel
-			/*@RequestParam(value = "name") String name,
-			@RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password*/)
+	public @ResponseBody JSONObject createUser(@RequestBody UserModel usermodel)
 			throws NoSuchAlgorithmException, SolrServerException, IOException {
-		UserModel userobj = new UserModel();
-		userobj.setName(usermodel.getName());
-		userobj.setEmail(usermodel.getEmail());
-		userobj.setPassword(usermodel.getPassword());
-		userobj.setDateOfCreation(new Date());
-		return dataservice.saveUser(userobj);
+		usermodel.setDateOfCreation(new Date());
+		HttpStatus status = dataservice.saveUser(usermodel);
+		
+		JSONObject statusobj = new JSONObject();
+		statusobj.put("status", status);
+		if (status == HttpStatus.FOUND) {
+			statusobj.put("message", "User already exists");
+		} else {
+			statusobj.put("message", "User registered successfully");
+		}
+
+		return statusobj;
+
 	}
 
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
@@ -51,12 +55,12 @@ public class UserController {
 		userobj.put("password", password);
 		return dataservice.authenticate(userobj);
 	}
-	
+
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
 	public @ResponseBody JSONObject changePassword(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestParam(value = "email") String email,
-			@RequestParam (value = "newPassword") String newPassword)
+			@RequestParam(value = "newPassword") String newPassword)
 			throws NoSuchAlgorithmException, ParseException {
 		UserModel usermodel = new UserModel();
 		usermodel.setEmail(email);

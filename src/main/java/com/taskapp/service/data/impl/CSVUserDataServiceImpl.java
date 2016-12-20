@@ -12,7 +12,6 @@ import com.taskapp.constants.Constants;
 import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.UserModel;
 import com.taskapp.service.data.CSVUserDataService;
-import com.taskapp.service.data.DataService;
 import com.taskapp.solr.SearchHandler;
 import com.taskapp.utils.Encrypt;
 

@@ -49,14 +49,19 @@ public class SearchManagerImpl implements SearchHandler {
 		SolrDocumentList docsans = new SolrDocumentList();
 		SolrQuery solrQuery = new SolrQuery();
 		solrQuery.setQuery(searchVal + "*");
-		solrQuery.setQuery("tagValue:(" + "*" + searchVal + "*" + ") AND " + "tagType:(" + searchField + ")" + "tagName:(" + "*" + searchVal + "*");
-		solrQuery.setFields("tagName", "tagType", "tagValue");
-		
+		solrQuery
+				.setQuery("(tagValue:(" + "*" + searchVal + "*" + ") AND "
+						+ "tagType:(" + searchField + ")) OR " + "(tagName:("
+						+ "*" + searchVal + "*" + ") AND " + "tagType:("
+						+ searchField + "))");
+		//solrQuery.setFields("tagName", "tagType", "tagValue");
+		solrQuery.setFields("tagValue");
+
 		QueryResponse rsp = server.query(solrQuery, METHOD.POST);
 		System.out.println("query = " + solrQuery.toString());
 		docsans = rsp.getResults();
 		System.out.println(docsans);
-		
+
 		server.close();
 		return docsans;
 	}
@@ -64,12 +69,12 @@ public class SearchManagerImpl implements SearchHandler {
 	@Override
 	public void deleteTag(String fieldName, String fieldValue)
 			throws SolrServerException, IOException {
-		
-			String solrUrl = env.getProperty(Constants.SOLR_URL);
-			HttpSolrClient server = new HttpSolrClient(solrUrl);
-			server.deleteByQuery(fieldName + ":" + fieldValue);
-			server.commit();
-			server.close();
+
+		String solrUrl = env.getProperty(Constants.SOLR_URL);
+		HttpSolrClient server = new HttpSolrClient(solrUrl);
+		server.deleteByQuery(fieldName + ":" + fieldValue);
+		server.commit();
+		server.close();
 	}
 
 	@Override

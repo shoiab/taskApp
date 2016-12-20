@@ -83,7 +83,6 @@ public class TaskappApplication extends WebMvcConfigurerAdapter{
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		System.out.println("interceptors");
 		registry.addInterceptor(new RequestProcessingInterceptor()).excludePathPatterns("/api/taskapp/user/**");
 	}
 }

@@ -3,6 +3,7 @@ package com.taskapp.controller;
 import java.io.IOException;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -24,13 +25,23 @@ public class CSVGroupController {
 	CSVGroupDataService csvgroupservice;
 
 	@RequestMapping(value = "/createGroupFromCSV", method = RequestMethod.POST)
-	public HttpStatus createGroupFromCSV(
+	public JSONObject createGroupFromCSV(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestParam(value = "groupName") String groupName)
 			throws SolrServerException, IOException {
 		String emails = csvgrouphelper.convertCSVToGroupList();
 		HttpStatus status = csvgroupservice.createGroup(emails, groupName);
-		return status;
+
+		JSONObject statusobj = new JSONObject();
+
+		statusobj.put("status", status);
+		if (status == HttpStatus.FOUND) {
+			statusobj.put("message", "Group already exists");
+		} else {
+			statusobj.put("message", "Group created successfully");
+		}
+
+		return statusobj;
 
 	}
 

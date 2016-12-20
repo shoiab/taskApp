@@ -3,6 +3,7 @@ package com.taskapp.dbOperation;
 
 import org.springframework.http.HttpStatus;
 
+import com.taskapp.model.GroupModel;
 import com.taskapp.model.UserModel;
 
 public interface DbOperationService {
@@ -13,5 +14,7 @@ public interface DbOperationService {
 	public void createTag(String name, String tagTypeUser, String email);
 
 	public void updateUserPassword(String encryptUserPassword, String email);
+
+	public HttpStatus createGroup(GroupModel groupmodel);
 
 }

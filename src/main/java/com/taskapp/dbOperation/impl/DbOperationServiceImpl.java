@@ -14,6 +14,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 import com.taskapp.dbOperation.DbOperationService;
+import com.taskapp.model.GroupModel;
 import com.taskapp.model.TagModel;
 import com.taskapp.model.UserModel;
 
@@ -42,10 +43,10 @@ public class DbOperationServiceImpl implements DbOperationService {
 		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
 		
 		if (obj.first() == null) {
-			BasicDBObject basicobj = (BasicDBObject) JSON.parse(gson
+			BasicDBObject basicUserObj = (BasicDBObject) JSON.parse(gson
 					.toJson(usermodel));
 			
-			coll.insertOne(basicobj);
+			coll.insertOne(basicUserObj);
 			return HttpStatus.OK;
 		}else{
 			return HttpStatus.FOUND;
@@ -114,9 +115,33 @@ public class DbOperationServiceImpl implements DbOperationService {
 			Document searchQuery = new Document().append("email",email);
 			newDocument.put("$set", new BasicDBObject("password", encryptUserPassword));
 			coll.updateOne(searchQuery, newDocument);
+		}	
+	}
+
+	@Override
+	public HttpStatus createGroup(GroupModel groupmodel) {
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.groupCollection"),
+				BasicDBObject.class);
+
+		Gson gson = new Gson();
+		
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("groupName", groupmodel.getGroupName());
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		
+		if (obj.first() == null) {
+			BasicDBObject basicGroupObj = (BasicDBObject) JSON.parse(gson
+					.toJson(groupmodel));
+			
+			coll.insertOne(basicGroupObj);
+			return HttpStatus.OK;
+		}else{
+			return HttpStatus.FOUND;
 		}
-		
-		
 	}
 
 }
