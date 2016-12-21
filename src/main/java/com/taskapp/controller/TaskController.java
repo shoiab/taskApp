@@ -62,14 +62,14 @@ public class TaskController {
 		return str;
 	}*/
 
-	@RequestMapping(value = "/notifyTask", method = RequestMethod.GET)
-	public @ResponseBody String notifyTask(
+	@RequestMapping(value = "/postTask", method = RequestMethod.GET)
+	public @ResponseBody JSONObject notifyTask(
 			@RequestHeader(value = "auth_key") String auth_key,
-			@RequestParam(value = "taskName") String taskName)
+			@RequestParam(value = "taskTitle") String taskName)
 			throws URISyntaxException {
 
 		TaskModel taskmodel = taskservice.fetchTask(taskName);
-		String statusobj = new String();
+		JSONObject statusobj = new JSONObject();
 
 		if (taskmodel != null) {
 
@@ -79,7 +79,7 @@ public class TaskController {
 			URI url = new URI("http://localhost:8081/api/taskapp/sendEmail");
 
 			statusobj = restTemplate.postForObject(url, json,
-					String.class);
+					JSONObject.class);
 		}
 
 		return statusobj;
