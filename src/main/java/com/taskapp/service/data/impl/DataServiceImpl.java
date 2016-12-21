@@ -56,6 +56,7 @@ public class DataServiceImpl implements DataService {
 		JSONObject userobj = dbservice.saveUser(usermodel);
 		if(userobj.get("HTTPStatus") != HttpStatus.FOUND){
 			//solrService.indexuser(usermodel);
+			dbservice.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail());
 			tagservice.createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail(), userobj.get("id").toString());
 		}
 		return (HttpStatus) userobj.get("HTTPStatus");
