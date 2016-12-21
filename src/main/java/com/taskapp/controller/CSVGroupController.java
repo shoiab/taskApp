@@ -34,7 +34,7 @@ public class CSVGroupController {
 
 		JSONObject statusobj = new JSONObject();
 
-		statusobj.put("status", status);
+		statusobj.put("status", status.value());
 		if (status == HttpStatus.FOUND) {
 			statusobj.put("message", "Group already exists");
 		} else {

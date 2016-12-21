@@ -18,6 +18,7 @@ import com.mongodb.util.JSON;
 import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.GroupModel;
 import com.taskapp.model.TagModel;
+import com.taskapp.model.TaskModel;
 import com.taskapp.model.UserModel;
 
 @Service
@@ -52,14 +53,14 @@ public class DbOperationServiceImpl implements DbOperationService {
 			coll.insertOne(basicUserObj);
 			ObjectId id = basicUserObj.getObjectId("_id");
 			json.put("HTTPStatus", HttpStatus.OK);
-			json.put("Id",id);
+			json.put("id",id);
 			return json;
 			
 		}else{
 			
 			ObjectId id = basicUserObj.getObjectId("_id");
 			json.put("HTTPStatus", HttpStatus.FOUND);
-			json.put("Id",id);
+			json.put("id",id);
 			return json;
 		}
 
@@ -153,13 +154,66 @@ public class DbOperationServiceImpl implements DbOperationService {
 			
 			coll.insertOne(basicGroupObj);
 			json.put("HTTPStatus", HttpStatus.OK);
-			json.put("id", basicGroupObj.get("id"));
+			json.put("id", basicGroupObj.get("_id"));
 			return json;
 		}else{
 			json.put("HTTPStatus", HttpStatus.FOUND);
-			json.put("id", basicGroupObj.get("id"));
+			json.put("id", basicGroupObj.get("_id"));
 			return json;
 		}
+	}
+
+	@Override
+	public JSONObject createTask(TaskModel taskModel) {
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.taskCollection"),
+				BasicDBObject.class);
+
+		Gson gson = new Gson();
+		
+		JSONObject json = new JSONObject();
+		
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("taskTitle", taskModel.getTaskTitle());
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		
+		BasicDBObject basicGroupObj = (BasicDBObject) JSON.parse(gson
+				.toJson(taskModel));
+		
+		if (obj.first() == null) {
+			
+			coll.insertOne(basicGroupObj);
+			json.put("httpStatus", HttpStatus.OK);
+			json.put("id", basicGroupObj.get("_id"));
+			return json;
+		}else{
+			json.put("httpStatus", HttpStatus.FOUND);
+			json.put("id", basicGroupObj.get("_id"));
+			return json;
+		}
+	}
+
+	@Override
+	public TaskModel fetchTask(String taskName) {
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.taskCollection"),
+				BasicDBObject.class);
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("taskTitle", taskName);
+
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		TaskModel taskModel = new TaskModel();
+		if (obj.first() != null) {
+			taskModel = (TaskModel) (new Gson()).fromJson(obj.first().toString(),
+					TaskModel.class);
+		}
+		return taskModel;
 	}
 
 }

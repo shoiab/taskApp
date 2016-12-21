@@ -2,9 +2,9 @@ package com.taskapp.dbOperation;
 
 
 import org.json.simple.JSONObject;
-import org.springframework.http.HttpStatus;
 
 import com.taskapp.model.GroupModel;
+import com.taskapp.model.TaskModel;
 import com.taskapp.model.UserModel;
 
 public interface DbOperationService {
@@ -17,5 +17,9 @@ public interface DbOperationService {
 	public void updateUserPassword(String encryptUserPassword, String email);
 
 	public JSONObject createGroup(GroupModel groupmodel);
+
+	public JSONObject createTask(TaskModel taskModel);
+
+	public TaskModel fetchTask(String taskName);
 
 }

@@ -34,7 +34,7 @@ public class UserController {
 		HttpStatus status = dataservice.saveUser(usermodel);
 		
 		JSONObject statusobj = new JSONObject();
-		statusobj.put("status", status);
+		statusobj.put("status", status.value());
 		if (status == HttpStatus.FOUND) {
 			statusobj.put("message", "User already exists");
 		} else {

@@ -88,7 +88,7 @@ public class SearchManagerImpl implements SearchHandler {
 		tagdoc.addField("tagName", tagName);
 		tagdoc.addField("tagType", tagType);
 		tagdoc.addField("tagValue", tagValue);
-		tagdoc.addField("id", id);
+		tagdoc.addField(Constants.TAG_TYPE_ID, id);
 
 		server.add(tagdoc);
 		server.commit();

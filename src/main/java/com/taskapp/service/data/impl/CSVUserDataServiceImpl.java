@@ -33,9 +33,9 @@ public class CSVUserDataServiceImpl implements CSVUserDataService{
 		for(UserModel usermodel : userlist){
 			String encryptedPassword = encryptor.textEncrypt(usermodel.getPassword());
 			usermodel.setPassword(encryptedPassword); 
-			JSONObject status = dbservice.saveUser(usermodel);
-			if(status.get("HTTPStatus") != HttpStatus.FOUND){
-				solrService.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail(), Constants.TAG_TYPE_ID);
+			JSONObject statusobj = dbservice.saveUser(usermodel);
+			if(statusobj.get("HTTPStatus") != HttpStatus.FOUND){
+				solrService.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail(), statusobj.get("id").toString());
 				dbservice.createTag(usermodel.getName(), Constants.TAG_TYPE_USER, usermodel.getEmail());
 			}			
 		}

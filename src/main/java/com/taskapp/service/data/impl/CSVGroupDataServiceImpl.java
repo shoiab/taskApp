@@ -30,12 +30,12 @@ public class CSVGroupDataServiceImpl implements CSVGroupDataService{
 		groupmodel.setDateOfCreation(new Date());
 		groupmodel.setGroupName(groupName);
 		groupmodel.setGroupMailList(emails);
-		JSONObject group = dbservice.createGroup(groupmodel);
-		if(group.get("HTTPStatus") == HttpStatus.OK){
-			solrService.createTag(groupName, Constants.TAG_TYPE_GROUP, emails, Constants.TAG_TYPE_ID);
+		JSONObject groupobj = dbservice.createGroup(groupmodel);
+		if(groupobj.get("HTTPStatus") == HttpStatus.OK){
+			solrService.createTag(groupName, Constants.TAG_TYPE_GROUP, emails, groupobj.get("id").toString());
 			dbservice.createTag(groupName, Constants.TAG_TYPE_GROUP, emails);
 		}
-		return (HttpStatus) group.get("HTTPStatus");
+		return (HttpStatus) groupobj.get("HTTPStatus");
 	}
 
 }

@@ -56,7 +56,7 @@ public class DataServiceImpl implements DataService {
 		JSONObject userobj = dbservice.saveUser(usermodel);
 		if(userobj.get("HTTPStatus") != HttpStatus.FOUND){
 			//solrService.indexuser(usermodel);
-			tagservice.createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail(), (String)userobj.get("id"));
+			tagservice.createTag(usermodel.getName(),Constants.TAG_TYPE_USER,usermodel.getEmail(), userobj.get("id").toString());
 		}
 		return (HttpStatus) userobj.get("HTTPStatus");
 	}
@@ -119,7 +119,10 @@ public class DataServiceImpl implements DataService {
 		String encryptUserPassword = encryptor.textEncrypt(usermodel.getPassword());
 		dbservice.updateUserPassword(encryptUserPassword, usermodel.getEmail());
 		template.delete(auth_key);
-		return null;
+		JSONObject statusobj = new JSONObject();
+		statusobj.put("status", HttpStatus.OK.value());
+		statusobj.put("message", "Password successfully updated");
+		return statusobj;
 	}
 
 }
