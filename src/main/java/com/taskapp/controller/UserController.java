@@ -1,8 +1,13 @@
 package com.taskapp.controller;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.simple.JSONObject;
@@ -16,17 +21,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import com.taskapp.model.TaskModel;
 import com.taskapp.model.UserModel;
 import com.taskapp.service.data.DataService;
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
 	DataService dataservice;
 
+	@Inject
+	private RestTemplate restTemplate;
+	
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public @ResponseBody JSONObject createUser(@RequestBody UserModel usermodel)
 			throws NoSuchAlgorithmException, SolrServerException, IOException {
@@ -45,7 +54,7 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/auth", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/auth", method = RequestMethod.POST)
 	public @ResponseBody JSONObject authenticate(
 			@RequestParam(value = "email") String email,
 			@RequestParam(value = "password") String password)
@@ -54,6 +63,23 @@ public class UserController {
 		userobj.put("email", email);
 		userobj.put("password", password);
 		return dataservice.authenticate(userobj);
+	}*/
+	
+	@RequestMapping(value = "/auth", method = RequestMethod.GET)
+	public @ResponseBody JSONObject authenticate(
+			@RequestHeader(value = "email") String email,
+			@RequestHeader(value = "password") String password)
+			throws NoSuchAlgorithmException, ParseException, URISyntaxException {
+	JSONObject statusobj = new JSONObject();
+	JSONObject loginValues = new JSONObject();
+	loginValues.put("email", email);
+	loginValues.put("password", password);
+	URI url = new URI("http://localhost:8082/api/taskapp/auth");
+
+		statusobj = restTemplate.postForObject(url, loginValues,
+				JSONObject.class);
+
+		return statusobj;
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
@@ -74,5 +100,11 @@ public class UserController {
 			throws NoSuchAlgorithmException {
 		return dataservice.getUser(auth_key);
 	}
-
+	
+	@RequestMapping(value = "/getMyTasks", method = RequestMethod.POST)
+	public @ResponseBody List<TaskModel> getMyTasks(
+			@RequestHeader(value = "auth_key") String auth_key)
+			throws NoSuchAlgorithmException {
+		return dataservice.getMyTasks(auth_key);
+	}
 }

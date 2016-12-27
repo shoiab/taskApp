@@ -1,6 +1,8 @@
 package com.taskapp.dbOperation;
 
 
+import java.util.List;
+
 import org.json.simple.JSONObject;
 
 import com.taskapp.model.GroupModel;
@@ -21,5 +23,7 @@ public interface DbOperationService {
 	public JSONObject createTask(TaskModel taskModel);
 
 	public TaskModel fetchTask(String taskName);
+
+	public List<TaskModel> getMyTasks(String userEmail);
 
 }

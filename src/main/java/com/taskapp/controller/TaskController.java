@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 import com.taskapp.model.TaskModel;
+import com.taskapp.service.data.DataService;
 import com.taskapp.service.data.TaskService;
 
 @RestController
@@ -33,6 +34,9 @@ public class TaskController {
 
 	@Autowired
 	TaskService taskservice;
+	
+	@Autowired
+	DataService dataservice;
 
 	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
 	public @ResponseBody JSONObject createTask(
@@ -40,6 +44,7 @@ public class TaskController {
 			@RequestBody TaskModel taskModel) throws NoSuchAlgorithmException,
 			SolrServerException, IOException {
 		taskModel.setTaskCreationDate(new Date());
+		taskModel.setUserEmail(dataservice.getUserEmail(auth_key));
 		HttpStatus status = taskservice.createTask(taskModel);
 
 		JSONObject statusobj = new JSONObject();

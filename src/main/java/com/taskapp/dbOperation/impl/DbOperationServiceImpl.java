@@ -1,5 +1,8 @@
 package com.taskapp.dbOperation.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
@@ -214,6 +217,31 @@ public class DbOperationServiceImpl implements DbOperationService {
 					TaskModel.class);
 		}
 		return taskModel;
+	}
+
+	@Override
+	public List<TaskModel> getMyTasks(String userEmail) {
+		List<TaskModel> myTasks = new ArrayList<TaskModel>();
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.taskCollection"),
+				BasicDBObject.class);
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("userEmail", userEmail);
+
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		
+		if (obj.first() != null) {
+			for(BasicDBObject task: obj){
+				TaskModel taskModel = new TaskModel();
+				taskModel = (TaskModel) (new Gson()).fromJson(task.toString(),
+						TaskModel.class);
+				myTasks.add(taskModel);
+			}
+		}
+		return myTasks;
 	}
 
 }

@@ -11,6 +11,16 @@ public class TaskModel {
 	private String taskTitle;
 	private String description;
 	private Date taskCreationDate;
+	private String userEmail;
+	@JsonIgnore
+	public String getUserEmail() {
+		return userEmail;
+	}
+	@JsonIgnore
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
 	private List<TaskRecipientModel> recipientList;
 	
 	@JsonIgnore
