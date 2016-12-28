@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 
+import com.taskapp.model.TaskModel;
 import com.taskapp.model.UserModel;
 
 public interface SearchHandler {
@@ -20,5 +21,9 @@ public interface SearchHandler {
 	SolrDocumentList getAllUsers() throws SolrServerException, IOException;
 
 	SolrDocumentList getAllGroups() throws SolrServerException, IOException;
+
+	void createTask(TaskModel taskModel) throws SolrServerException, IOException;
+
+	SolrDocumentList getAllTasks(String userEmail) throws SolrServerException, IOException;
 
 }

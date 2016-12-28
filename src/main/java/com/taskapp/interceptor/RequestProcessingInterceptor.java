@@ -5,10 +5,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.auth.AuthenticationException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import redis.clients.jedis.Jedis;
@@ -22,7 +22,7 @@ public class RequestProcessingInterceptor extends HandlerInterceptorAdapter {
 			.getLogger(RequestProcessingInterceptor.class);
 
 	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) {
+			HttpServletResponse response, Object handler) throws AuthenticationException {
 		long startTime = System.currentTimeMillis();
 
 		if (!request.getRequestURI().equals("/api/taskapp/user/**")) {
@@ -38,8 +38,7 @@ public class RequestProcessingInterceptor extends HandlerInterceptorAdapter {
 
 				// System.out.println("jedismap ::"+jedismap.keySet());
 				if (!jedis.exists(auth_key)) {
-					throw new AuthenticationCredentialsNotFoundException(
-							"No credentials found in context");
+					throw new AuthenticationException("Bad credentials");
 				}
 			}
 

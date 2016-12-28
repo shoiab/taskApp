@@ -2,7 +2,6 @@ package com.taskapp.service.data;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.simple.JSONObject;
@@ -23,6 +22,8 @@ public interface DataService {
 
 	public String getUserEmail(String auth_key);
 
-	public List<TaskModel> getMyTasks(String auth_key);
+	public void createTaskTag(TaskModel taskModel);
+
+	/*public List<TaskModel> getMyTasks(String auth_key);*/
 	
 }

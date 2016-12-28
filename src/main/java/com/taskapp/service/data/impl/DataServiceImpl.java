@@ -3,7 +3,6 @@ package com.taskapp.service.data.impl;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -135,8 +134,13 @@ public class DataServiceImpl implements DataService {
 	}
 
 	@Override
+	public void createTaskTag(TaskModel taskModel) {
+		dbservice.createTaskTag(taskModel);
+	}
+
+	/*@Override
 	public List<TaskModel> getMyTasks(String auth_key) {
 		return dbservice.getMyTasks(getUserEmail(auth_key));
-	}
+	}*/
 
 }

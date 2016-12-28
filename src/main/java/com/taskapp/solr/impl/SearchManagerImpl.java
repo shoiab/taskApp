@@ -1,6 +1,10 @@
 package com.taskapp.solr.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
@@ -14,6 +18,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.taskapp.constants.Constants;
+import com.taskapp.model.TaskModel;
+import com.taskapp.model.TaskRecipientModel;
 import com.taskapp.model.UserModel;
 import com.taskapp.solr.SearchHandler;
 
@@ -127,6 +133,56 @@ public class SearchManagerImpl implements SearchHandler {
 				.setQuery("tagType:(" + Constants.TAG_TYPE_GROUP + ")");
 		//solrQuery.setFields("tagName", "tagType", "tagValue");
 		/*solrQuery.setFields("tagValue");*/
+
+		QueryResponse rsp = server.query(solrQuery, METHOD.GET);
+		System.out.println("query = " + solrQuery.toString());
+		docsans = rsp.getResults();
+		System.out.println(docsans);
+
+		server.close();
+		return docsans;
+	}
+
+	@Override
+	public void createTask(TaskModel taskModel) throws SolrServerException, IOException {		
+		
+		List<Map<String, String>> recipientlist = new ArrayList<Map<String, String>>();
+		Map<String, String> recipientMap;
+		
+		if(taskModel.getRecipientList().size() > 0){
+			for(TaskRecipientModel recipientmodel : taskModel.getRecipientList()){
+				recipientMap = new HashMap<String, String>();
+				recipientMap.put("type", recipientmodel.getRecipientType());
+				recipientMap.put("recipient", recipientmodel.getRecipient());
+				recipientlist.add(recipientMap);
+			}
+		}		
+		
+		String solrUrl = env.getProperty(Constants.SOLR_URL);
+		HttpSolrClient server = new HttpSolrClient(solrUrl);
+		SolrInputDocument tagdoc = new SolrInputDocument();
+		
+		tagdoc.addField("tagName", taskModel.getTaskTitle());
+		tagdoc.addField("tagType", Constants.TAG_TYPE_TASK);
+		tagdoc.addField("recipients", recipientlist.toString());
+		tagdoc.addField("taskDescription", taskModel.getDescription());
+		tagdoc.addField(Constants.TAG_TYPE_ID, taskModel.getTaskid());
+		tagdoc.addField("taskCreator", taskModel.getTaskCreator());
+
+		server.add(tagdoc);
+		server.commit();
+		server.close();
+	}
+
+	@Override
+	public SolrDocumentList getAllTasks(String taskCreator) throws SolrServerException, IOException {
+		String solrUrl = env.getProperty(Constants.SOLR_URL);
+		HttpSolrClient server = new HttpSolrClient(solrUrl);
+		SolrDocumentList docsans = new SolrDocumentList();
+		SolrQuery solrQuery = new SolrQuery();
+		solrQuery
+				.setQuery("tagType:(" + Constants.TAG_TYPE_TASK + ") AND "
+						+ "taskCreator:(" + taskCreator + ")");
 
 		QueryResponse rsp = server.query(solrQuery, METHOD.GET);
 		System.out.println("query = " + solrQuery.toString());

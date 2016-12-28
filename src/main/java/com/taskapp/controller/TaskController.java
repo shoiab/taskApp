@@ -5,10 +5,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrDocumentList;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,7 @@ public class TaskController {
 			@RequestBody TaskModel taskModel) throws NoSuchAlgorithmException,
 			SolrServerException, IOException {
 		taskModel.setTaskCreationDate(new Date());
-		taskModel.setUserEmail(dataservice.getUserEmail(auth_key));
+		taskModel.setTaskCreator(dataservice.getUserEmail(auth_key));
 		HttpStatus status = taskservice.createTask(taskModel);
 
 		JSONObject statusobj = new JSONObject();
@@ -52,7 +54,7 @@ public class TaskController {
 		if (status == HttpStatus.FOUND) {
 			statusobj.put("message", "Task already exists");
 		} else {
-			statusobj.put("message", "Task registered successfully");
+			statusobj.put("message", "Task created successfully");
 		}
 
 		return statusobj;
@@ -88,6 +90,13 @@ public class TaskController {
 		}
 
 		return statusobj;
+	}
+	
+	@RequestMapping(value = "/getUserTasks", method = RequestMethod.POST)
+	public @ResponseBody SolrDocumentList getMyTasks(
+			@RequestHeader(value = "auth_key") String auth_key)
+			throws NoSuchAlgorithmException, SolrServerException, IOException {
+		return taskservice.getAllTasks(auth_key);
 	}
 
 }

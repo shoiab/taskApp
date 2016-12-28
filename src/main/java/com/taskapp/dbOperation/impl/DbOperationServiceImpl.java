@@ -1,8 +1,5 @@
 package com.taskapp.dbOperation.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
@@ -18,6 +15,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
+import com.taskapp.constants.Constants;
 import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.GroupModel;
 import com.taskapp.model.TagModel;
@@ -220,6 +218,39 @@ public class DbOperationServiceImpl implements DbOperationService {
 	}
 
 	@Override
+	public void createTaskTag(TaskModel taskModel) {
+		MongoDatabase db = mongoClient.getDatabase(environment
+				.getProperty("mongo.dataBase"));
+
+		MongoCollection<BasicDBObject> coll = db.getCollection(
+				environment.getProperty("mongo.tagCollection"),
+				BasicDBObject.class);
+
+		Gson gson = new Gson();
+		JSONObject taskjson = new JSONObject();
+		
+		
+		TagModel tagmodel = new TagModel();
+		tagmodel.setTagName(taskModel.getTaskTitle());
+		tagmodel.setTagType(Constants.TAG_TYPE_TASK);
+		tagmodel.setTagValue(gson.toJson(taskModel));
+		
+		
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("tagName", taskModel.getTaskTitle());
+		FindIterable<BasicDBObject> obj = coll.find(whereQuery);
+		
+		BasicDBObject basicTaskObj = (BasicDBObject) JSON.parse(gson
+				.toJson(tagmodel));
+		if (obj.first() == null) {
+			
+			coll.insertOne(basicTaskObj);
+			
+			//TaskModel taskmodel = gson.fromJson(basicTaskObj.get("tagValue").toString(), TaskModel.class);
+	}
+}
+
+	/*@Override
 	public List<TaskModel> getMyTasks(String userEmail) {
 		List<TaskModel> myTasks = new ArrayList<TaskModel>();
 		MongoDatabase db = mongoClient.getDatabase(environment
@@ -242,6 +273,6 @@ public class DbOperationServiceImpl implements DbOperationService {
 			}
 		}
 		return myTasks;
-	}
+	}*/
 
 }

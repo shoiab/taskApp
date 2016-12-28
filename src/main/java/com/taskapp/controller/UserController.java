@@ -101,10 +101,10 @@ public class UserController {
 		return dataservice.getUser(auth_key);
 	}
 	
-	@RequestMapping(value = "/getMyTasks", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/getMyTasks", method = RequestMethod.POST)
 	public @ResponseBody List<TaskModel> getMyTasks(
 			@RequestHeader(value = "auth_key") String auth_key)
 			throws NoSuchAlgorithmException {
 		return dataservice.getMyTasks(auth_key);
-	}
+	}*/
 }
