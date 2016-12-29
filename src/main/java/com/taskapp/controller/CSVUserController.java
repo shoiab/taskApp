@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.taskapp.service.data.CSVUserDataService;
 import com.taskapp.utils.CSVUserhelper;
 
 @RestController
@@ -26,9 +25,6 @@ public class CSVUserController {
 
 	@Autowired
 	private CSVUserhelper csvhelper;
-
-	@Autowired
-	CSVUserDataService csvdataservice;
 	
 	@Inject
 	private RestTemplate restTemplate;
