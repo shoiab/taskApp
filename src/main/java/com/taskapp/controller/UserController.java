@@ -153,8 +153,21 @@ public class UserController {
 	@RequestMapping(value = "/getuserfromcache", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getUserFromCache(
 			@RequestHeader(value = "auth_key") String auth_key)
-			throws NoSuchAlgorithmException {
-		return dataservice.getUser(auth_key);
+			throws NoSuchAlgorithmException, URISyntaxException {
+		
+		URI url = new URI("http://localhost:8083/api/taskapp/getuserfromcache");
+		
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+		
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		JSONObject statusobj = new JSONObject();
+		
+		statusobj = restTemplate
+				.postForObject(url, request, JSONObject.class);
+		
+		return statusobj;
+		
 	}
 
 	/*
