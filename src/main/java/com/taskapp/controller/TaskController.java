@@ -80,11 +80,11 @@ public class TaskController {
 		if (taskmodel != null) {
 
 			Gson gson = new Gson();
-			String json = gson.toJson(taskmodel);
+			String taskjson = gson.toJson(taskmodel);
 
 			URI url = new URI("http://localhost:8081/api/notifier/sendEmail");
 
-			statusobj = restTemplate.postForObject(url, json,
+			statusobj = restTemplate.postForObject(url, taskjson,
 					JSONObject.class);
 		}
 

@@ -12,6 +12,7 @@ public class TaskModel {
 	private String description;
 	private Date taskCreationDate;
 	private String taskCreator;
+	private List<TaskRecipientModel> recipientList;
 
 	@JsonIgnore
 	public String getTaskCreator() {
@@ -22,8 +23,6 @@ public class TaskModel {
 	public void setTaskCreator(String taskCreator) {
 		this.taskCreator = taskCreator;
 	}
-
-	private List<TaskRecipientModel> recipientList;
 
 	@JsonIgnore
 	public String getTaskid() {
