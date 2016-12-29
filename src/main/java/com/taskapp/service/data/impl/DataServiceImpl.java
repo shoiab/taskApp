@@ -1,27 +1,11 @@
 package com.taskapp.service.data.impl;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.solr.client.solrj.SolrServerException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import redis.clients.jedis.Jedis;
-
-import com.google.gson.Gson;
-import com.taskapp.constants.Constants;
 import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.TaskModel;
-import com.taskapp.model.UserModel;
 import com.taskapp.service.data.DataService;
 import com.taskapp.service.data.TagService;
 import com.taskapp.solr.SearchHandler;
@@ -49,7 +33,7 @@ public class DataServiceImpl implements DataService {
 	@Autowired
 	private TagService tagservice;
 
-	@Override
+	/*@Override
 	public HttpStatus saveUser(UserModel usermodel) throws NoSuchAlgorithmException, SolrServerException, IOException {
 		String encryptUserPassword = encryptor.textEncrypt(usermodel
 				.getPassword());
@@ -114,9 +98,9 @@ public class DataServiceImpl implements DataService {
 		template.opsForHash().putAll(key, usermodel);
 		//template.expire(key, 2, TimeUnit.MINUTES);
 		return HttpStatus.OK;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public JSONObject changePassword(UserModel usermodel, String auth_key) {
 		String encryptUserPassword = encryptor.textEncrypt(usermodel.getPassword());
 		dbservice.updateUserPassword(encryptUserPassword, usermodel.getEmail());
@@ -125,7 +109,7 @@ public class DataServiceImpl implements DataService {
 		statusobj.put("status", HttpStatus.OK.value());
 		statusobj.put("message", "Password successfully updated");
 		return statusobj;
-	}
+	}*/
 
 	@Override
 	public String getUserEmail(String auth_key) {

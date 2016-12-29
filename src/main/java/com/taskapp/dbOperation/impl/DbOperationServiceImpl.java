@@ -1,7 +1,5 @@
 package com.taskapp.dbOperation.impl;
 
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -20,7 +18,6 @@ import com.taskapp.dbOperation.DbOperationService;
 import com.taskapp.model.GroupModel;
 import com.taskapp.model.TagModel;
 import com.taskapp.model.TaskModel;
-import com.taskapp.model.UserModel;
 
 @Service
 public class DbOperationServiceImpl implements DbOperationService {
@@ -31,7 +28,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 	@Autowired
 	private MongoClient mongoClient;
 
-	@Override
+	/*@Override
 	public JSONObject saveUser(UserModel usermodel) {
 		MongoDatabase db = mongoClient.getDatabase(environment
 				.getProperty("mongo.dataBase"));
@@ -85,7 +82,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 					UserModel.class);
 		}
 		return userModel;
-	}
+	}*/
 
 	@Override
 	public void createTag(String name, String tagTypeUser, String email) {
@@ -108,7 +105,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 		
 	}
 
-	@Override
+	/*@Override
 	public void updateUserPassword(String encryptUserPassword, String email) {
 		MongoDatabase db = mongoClient.getDatabase(environment
 				.getProperty("mongo.dataBase"));
@@ -129,7 +126,7 @@ public class DbOperationServiceImpl implements DbOperationService {
 			newDocument.put("$set", new BasicDBObject("password", encryptUserPassword));
 			coll.updateOne(searchQuery, newDocument);
 		}	
-	}
+	}*/
 
 	@Override
 	public JSONObject createGroup(GroupModel groupmodel) {

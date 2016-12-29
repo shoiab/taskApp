@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 

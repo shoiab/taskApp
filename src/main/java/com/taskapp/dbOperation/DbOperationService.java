@@ -5,16 +5,15 @@ import org.json.simple.JSONObject;
 
 import com.taskapp.model.GroupModel;
 import com.taskapp.model.TaskModel;
-import com.taskapp.model.UserModel;
 
 public interface DbOperationService {
-	public JSONObject saveUser(UserModel usermodel);
+	//public JSONObject saveUser(UserModel usermodel);
 
-	public UserModel getUserObj(String email);
+	//public UserModel getUserObj(String email);
 
 	public void createTag(String name, String tagTypeUser, String email);
 
-	public void updateUserPassword(String encryptUserPassword, String email);
+	//public void updateUserPassword(String encryptUserPassword, String email);
 
 	public JSONObject createGroup(GroupModel groupmodel);
 
