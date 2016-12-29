@@ -59,7 +59,7 @@ public class UserController {
 			throws NoSuchAlgorithmException, SolrServerException, IOException,
 			URISyntaxException {
 		JSONObject statusobj = new JSONObject();
-		URI url = new URI("http://localhost:8083/api/taskapp/createUser");
+		URI url = new URI("http://localhost:8083/api/user/createUser");
 
 		statusobj = restTemplate
 				.postForObject(url, usermodel, JSONObject.class);
@@ -85,7 +85,7 @@ public class UserController {
 			@RequestParam(value = "password") String password)
 			throws NoSuchAlgorithmException, ParseException, URISyntaxException {
 		
-	    String url = "http://localhost:8082/api/taskapp/auth";
+	    String url = "http://localhost:8082/api/authenticate/auth";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 		        // Add query parameter
@@ -126,7 +126,7 @@ public class UserController {
 		
 		//URI url = new URI("http://localhost:8083/api/taskapp/changePassword");
 		
-		String url = "http://localhost:8083/api/taskapp/changePassword";
+		String url = "http://localhost:8083/api/user/changePassword";
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		headers.add("auth_key", auth_key);
@@ -155,7 +155,7 @@ public class UserController {
 			@RequestHeader(value = "auth_key") String auth_key)
 			throws NoSuchAlgorithmException, URISyntaxException {
 		
-		URI url = new URI("http://localhost:8083/api/taskapp/getuserfromcache");
+		URI url = new URI("http://localhost:8083/api/user/getuserfromcache");
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		headers.add("auth_key", auth_key);

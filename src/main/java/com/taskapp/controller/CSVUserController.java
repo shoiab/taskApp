@@ -34,7 +34,7 @@ public class CSVUserController {
 			@RequestHeader(value = "auth_key") String auth_key)
 			throws SolrServerException, IOException, URISyntaxException {
 		
-		URI url = new URI("http://localhost:8083/api/taskapp/uploadUsersFromCSV");
+		URI url = new URI("http://localhost:8083/api/user/uploadUsersFromCSV");
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		headers.add("auth_key", auth_key);

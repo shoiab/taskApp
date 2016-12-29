@@ -82,7 +82,7 @@ public class TaskController {
 			Gson gson = new Gson();
 			String json = gson.toJson(taskmodel);
 
-			URI url = new URI("http://localhost:8081/api/taskapp/sendEmail");
+			URI url = new URI("http://localhost:8081/api/notifier/sendEmail");
 
 			statusobj = restTemplate.postForObject(url, json,
 					JSONObject.class);
