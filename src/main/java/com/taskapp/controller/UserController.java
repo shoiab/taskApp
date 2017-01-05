@@ -79,7 +79,7 @@ public class UserController {
 	 * password); return dataservice.authenticate(userobj); }
 	 */
 
-	@RequestMapping(value = "/auth", method = RequestMethod.GET)
+	@RequestMapping(value = "/auth", method = RequestMethod.POST)
 	public @ResponseBody JSONObject authenticate(
 			@RequestParam(value = "email") String email,
 			@RequestParam(value = "password") String password)
