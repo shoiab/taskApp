@@ -1,7 +1,6 @@
 package com.taskapp.controller;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
@@ -9,9 +8,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -24,14 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.taskapp.service.data.TagService;
-
 @RestController
 public class TagController {
 
-	@Autowired
-	TagService tagservice;
-	
 	@Autowired
 	RestTemplate restTemplate;
 
@@ -114,12 +106,10 @@ public class TagController {
 
 		HttpEntity<String> request = new HttpEntity<String>(headers);
 		
-		SolrDocumentList statusobj = new SolrDocumentList();
+		HttpEntity<SolrDocumentList> statusobj = restTemplate
+				.exchange(url, HttpMethod.GET, request, SolrDocumentList.class);
 		
-		statusobj = restTemplate
-				.postForObject(url, request, SolrDocumentList.class);
-		
-		return statusobj;	
+		return statusobj.getBody();	
 	}
 	
 	@RequestMapping(value= "/getAllGroups", method = RequestMethod.GET)
@@ -136,12 +126,10 @@ public class TagController {
 
 		HttpEntity<String> request = new HttpEntity<String>(headers);
 		
-		SolrDocumentList statusobj = new SolrDocumentList();
+		HttpEntity<SolrDocumentList> statusobj = restTemplate
+				.exchange(url, HttpMethod.GET, request, SolrDocumentList.class);
 		
-		statusobj = restTemplate
-				.postForObject(url, request, SolrDocumentList.class);
-		
-		return statusobj;	
+		return statusobj.getBody();	
 	}
 
 	/*

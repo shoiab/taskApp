@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import javax.inject.Inject;
 
 import org.apache.solr.client.solrj.SolrServerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
@@ -18,13 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.taskapp.utils.CSVUserhelper;
-
 @RestController
 public class CSVUserController {
-
-	@Autowired
-	private CSVUserhelper csvhelper;
 	
 	@Inject
 	private RestTemplate restTemplate;

@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -26,13 +25,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.taskapp.model.UserModel;
-import com.taskapp.service.data.DataService;
 
 @RestController
 public class UserController {
-
-	@Autowired
-	DataService dataservice;
 
 	@Inject
 	private RestTemplate restTemplate;

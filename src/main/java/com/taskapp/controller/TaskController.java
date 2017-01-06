@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 
 import javax.inject.Inject;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
 import com.taskapp.model.TaskModel;
-import com.taskapp.service.data.DataService;
-import com.taskapp.service.data.TaskService;
 
 @RestController
 public class TaskController {
@@ -33,69 +34,75 @@ public class TaskController {
 	@Inject
 	private RestTemplate restTemplate;
 
-	@Autowired
-	TaskService taskservice;
-	
-	@Autowired
-	DataService dataservice;
-
 	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
 	public @ResponseBody JSONObject createTask(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestBody TaskModel taskModel) throws NoSuchAlgorithmException,
-			SolrServerException, IOException {
-		taskModel.setTaskCreationDate(new Date());
-		taskModel.setTaskCreator(dataservice.getUserEmail(auth_key));
-		HttpStatus status = taskservice.createTask(taskModel);
+			SolrServerException, IOException, URISyntaxException {
 
+		URI url = new URI("http://localhost:8087/api/task/createTask");
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+		headers.add("Content-Type", "application/json");
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<TaskModel> request = new HttpEntity<TaskModel>(taskModel,
+				headers);
 		JSONObject statusobj = new JSONObject();
-		statusobj.put("status", status.value());
-		if (status == HttpStatus.FOUND) {
-			statusobj.put("message", "Task already exists");
-		} else {
-			statusobj.put("message", "Task created successfully");
-		}
-
+		statusobj = restTemplate.postForObject(url, request, JSONObject.class);
 		return statusobj;
+
 	}
-
-	/*@RequestMapping(value = "/pingAnotherMicroservice", method = RequestMethod.GET)
-	public @ResponseBody String pingMS() throws URISyntaxException {
-
-		URI url = new URI("http://localhost:8081/api/taskapp/sendEmail");
-
-		String str = restTemplate.getForObject(url, String.class);
-		return str;
-	}*/
 
 	@RequestMapping(value = "/postTask", method = RequestMethod.GET)
 	public @ResponseBody JSONObject notifyTask(
 			@RequestHeader(value = "auth_key") String auth_key,
-			@RequestParam(value = "taskTitle") String taskName)
+			@RequestParam(value = "taskTitle") String taskTitle)
 			throws URISyntaxException {
 
-		TaskModel taskmodel = taskservice.fetchTask(taskName);
-		JSONObject statusobj = new JSONObject();
+		String url = "http://localhost:8087/api/task/postTask";
 
-		if (taskmodel != null) {
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
 
-			Gson gson = new Gson();
-			String taskjson = gson.toJson(taskmodel);
+		HttpEntity<String> request = new HttpEntity<String>(headers);
 
-			URI url = new URI("http://localhost:8081/api/notifier/sendEmail");
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+		// Add query parameter
+				.queryParam("taskTitle", taskTitle);
 
-			statusobj = restTemplate.postForObject(url, taskjson,
-					JSONObject.class);
-		}
+		ResponseEntity<JSONObject> statusobj = restTemplate.exchange(builder
+				.build().toUri(), HttpMethod.GET, request, JSONObject.class);
 
-		return statusobj;
+		return statusobj.getBody();
 	}
-	
+
 	@RequestMapping(value = "/getUserTasks", method = RequestMethod.POST)
 	public @ResponseBody SolrDocumentList getMyTasks(
 			@RequestHeader(value = "auth_key") String auth_key)
 			throws NoSuchAlgorithmException, SolrServerException, IOException {
-		return taskservice.getAllTasks(auth_key);
+
+		String url = "http://localhost:8087/api/task/getUserTasks";
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		SolrDocumentList statusobj = new SolrDocumentList();
+
+		statusobj = restTemplate.postForObject(url, request,
+				SolrDocumentList.class);
+
+		return statusobj;
+
 	}
 
 }
