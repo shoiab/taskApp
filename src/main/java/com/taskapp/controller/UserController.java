@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -31,6 +34,9 @@ public class UserController {
 
 	@Inject
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	/*
 	 * @RequestMapping(value = "/createUser", method = RequestMethod.POST)
@@ -172,4 +178,9 @@ public class UserController {
 	 * @RequestHeader(value = "auth_key") String auth_key) throws
 	 * NoSuchAlgorithmException { return dataservice.getMyTasks(auth_key); }
 	 */
+	
+	@RequestMapping("/msg")
+	   public String msg(@RequestHeader("Accept-Language") Locale locale){
+	      return messageSource.getMessage("msg",null,locale);
+	   }
 }

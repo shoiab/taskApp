@@ -1,6 +1,7 @@
 package com.taskapp;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,8 +18,10 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -90,5 +94,20 @@ public class TaskappApplication extends WebMvcConfigurerAdapter{
 	@Bean
 	public RestTemplate restTemplate() {
 	    return new RestTemplate();
+	}
+	
+	@Bean
+	public LocaleResolver localeResolver() {
+	 SessionLocaleResolver slr = new SessionLocaleResolver();
+	 slr.setDefaultLocale(Locale.US); // Set default Locale as US
+	 return slr;
+	}
+	 
+	@Bean
+	public ResourceBundleMessageSource messageSource() {
+	 ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+	 source.setBasenames("i18n/messages");  // name of the resource bundle 
+	 source.setUseCodeAsDefaultMessage(true);
+	 return source;
 	}
 }

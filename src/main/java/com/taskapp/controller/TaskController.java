@@ -104,5 +104,49 @@ public class TaskController {
 		return statusobj;
 
 	}
+	
+	@RequestMapping(value = "/createdTasks", method = RequestMethod.POST)
+	public @ResponseBody SolrDocumentList createdTasks(
+			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
+			SolrServerException, IOException {
+		String url = "http://localhost:8087/api/task/createdTasks";
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		SolrDocumentList statusobj = new SolrDocumentList();
+
+		statusobj = restTemplate.postForObject(url, request,
+				SolrDocumentList.class);
+
+		return statusobj;
+		
+	}
+	
+	@RequestMapping(value = "/completedTasks", method = RequestMethod.POST)
+	public @ResponseBody SolrDocumentList completedTasks(
+			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
+			SolrServerException, IOException {
+		
+		String url = "http://localhost:8087/api/task/completedTasks";
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		SolrDocumentList statusobj = new SolrDocumentList();
+
+		statusobj = restTemplate.postForObject(url, request,
+				SolrDocumentList.class);
+
+		return statusobj;
+	}
 
 }
