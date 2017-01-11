@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -179,8 +178,8 @@ public class UserController {
 	 * NoSuchAlgorithmException { return dataservice.getMyTasks(auth_key); }
 	 */
 	
-	@RequestMapping("/msg")
+	/*@RequestMapping("/msg")
 	   public String msg(@RequestHeader("Accept-Language") Locale locale){
 	      return messageSource.getMessage("msg",null,locale);
-	   }
+	   }*/
 }
