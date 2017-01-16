@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 public class TagController {
+	
+	static Logger logger = Logger.getLogger(TagController.class.getName());
 
 	@Autowired
 	RestTemplate restTemplate;
-
+  
 	/*
 	 * @RequestMapping(method = RequestMethod.POST) public void
 	 * addTag(@RequestHeader(value = "auth_key") String auth_key,
@@ -66,7 +69,6 @@ public class TagController {
 
 		HttpEntity<SolrDocumentList> usersObj = restTemplate.exchange(builder.build().encode().toUri(),
 				HttpMethod.GET, request, SolrDocumentList.class);
-		System.out.println(usersObj.getBody());
 		return usersObj.getBody();	*/
 		
 		
@@ -88,7 +90,7 @@ public class TagController {
 				HttpMethod.GET, request, SolrDocumentList.class);
 		
 		
-		System.out.println(tagobj.getBody());
+		logger.info(tagobj.getBody());
 		return tagobj.getBody();		
 	}
 	

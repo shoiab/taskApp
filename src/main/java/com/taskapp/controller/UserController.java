@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -30,6 +31,8 @@ import com.taskapp.model.UserModel;
 
 @RestController
 public class UserController {
+	
+	static Logger logger = Logger.getLogger(UserController.class.getName());
 
 	@Inject
 	private RestTemplate restTemplate;
@@ -92,7 +95,7 @@ public class UserController {
 		        .queryParam("email", email)
 		        .queryParam("password", password);
 		
-		System.out.println("statusobj :: "+builder.build().toUri());
+		logger.info("statusobj :: "+builder.build().toUri());
 		JSONObject statusobj = new JSONObject();
 		
 		statusobj = restTemplate
@@ -141,7 +144,7 @@ public class UserController {
 		        .queryParam("newPassword", newPassword);
 		
 		
-		System.out.println("statusobj :: "+builder.build().toUri());
+		logger.info("statusobj :: "+builder.build().toUri());
 		JSONObject statusobj = new JSONObject();
 		
 		statusobj = restTemplate

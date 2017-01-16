@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 import org.json.simple.JSONObject;
@@ -30,6 +31,8 @@ import com.taskapp.model.TaskModel;
 
 @RestController
 public class TaskController {
+	
+	static Logger logger = Logger.getLogger(TaskController.class.getName());
 
 	@Inject
 	private RestTemplate restTemplate;
@@ -105,11 +108,11 @@ public class TaskController {
 
 	}
 	
-	@RequestMapping(value = "/createdTasks", method = RequestMethod.POST)
-	public @ResponseBody SolrDocumentList createdTasks(
+	@RequestMapping(value = "/getOpenCreatedTasks", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getOpenCreatedTasks(
 			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
 			SolrServerException, IOException {
-		String url = "http://localhost:8087/api/task/createdTasks";
+		String url = "http://localhost:8087/api/task/getOpenCreatedTasks";
 
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		headers.add("auth_key", auth_key);
@@ -118,21 +121,22 @@ public class TaskController {
 				new MappingJackson2HttpMessageConverter());
 
 		HttpEntity<String> request = new HttpEntity<String>(headers);
-		SolrDocumentList statusobj = new SolrDocumentList();
+		JSONObject statusobj = new JSONObject();
 
 		statusobj = restTemplate.postForObject(url, request,
-				SolrDocumentList.class);
+				JSONObject.class);
+		
 
 		return statusobj;
 		
 	}
 	
-	@RequestMapping(value = "/completedTasks", method = RequestMethod.POST)
-	public @ResponseBody SolrDocumentList completedTasks(
+	@RequestMapping(value = "/getCompletedCreatedTasks", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getCompletedCreatedTasks(
 			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
 			SolrServerException, IOException {
 		
-		String url = "http://localhost:8087/api/task/completedTasks";
+		String url = "http://localhost:8087/api/task/getCompletedCreatedTasks";
 
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		headers.add("auth_key", auth_key);
@@ -141,10 +145,54 @@ public class TaskController {
 				new MappingJackson2HttpMessageConverter());
 
 		HttpEntity<String> request = new HttpEntity<String>(headers);
-		SolrDocumentList statusobj = new SolrDocumentList();
+		JSONObject statusobj = new JSONObject();
 
 		statusobj = restTemplate.postForObject(url, request,
-				SolrDocumentList.class);
+				JSONObject.class);
+
+		return statusobj;
+	}
+	
+	@RequestMapping(value = "/getPendingTasks", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getPendingTasks(
+			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
+			SolrServerException, IOException {
+		
+		String url = "http://localhost:8087/api/task/getPendingTasks";
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		JSONObject statusobj = new JSONObject();
+
+		statusobj = restTemplate.postForObject(url, request,
+				JSONObject.class);
+
+		return statusobj;
+	}
+	
+	@RequestMapping(value = "/getCompletedTasks", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getCompletedTasks(
+			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
+			SolrServerException, IOException {
+		
+		String url = "http://localhost:8087/api/task/getCompletedTasks";
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		JSONObject statusobj = new JSONObject();
+
+		statusobj = restTemplate.postForObject(url, request,
+				JSONObject.class);
 
 		return statusobj;
 	}
