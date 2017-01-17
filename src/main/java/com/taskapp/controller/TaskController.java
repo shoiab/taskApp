@@ -63,7 +63,7 @@ public class TaskController {
 	@RequestMapping(value = "/postTask", method = RequestMethod.GET)
 	public @ResponseBody JSONObject notifyTask(
 			@RequestHeader(value = "auth_key") String auth_key,
-			@RequestParam(value = "taskTitle") String taskTitle)
+			@RequestParam(value = "taskid") String taskid)
 			throws URISyntaxException {
 
 		String url = "http://localhost:8087/api/task/postTask";
@@ -77,7 +77,7 @@ public class TaskController {
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 		// Add query parameter
-				.queryParam("taskTitle", taskTitle);
+				.queryParam("taskid", taskid);
 
 		ResponseEntity<JSONObject> statusobj = restTemplate.exchange(builder
 				.build().toUri(), HttpMethod.GET, request, JSONObject.class);
