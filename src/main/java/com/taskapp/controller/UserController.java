@@ -84,16 +84,15 @@ public class UserController {
 
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
 	public @ResponseBody JSONObject authenticate(
-			@RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password)
+			@RequestParam(value = "email") String email)
+			
 			throws NoSuchAlgorithmException, ParseException, URISyntaxException {
 		
 	    String url = "http://localhost:8082/api/authenticate/auth";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 		        // Add query parameter
-		        .queryParam("email", email)
-		        .queryParam("password", password);
+		        .queryParam("email", email);
 		
 		logger.info("statusobj :: "+builder.build().toUri());
 		JSONObject statusobj = new JSONObject();
