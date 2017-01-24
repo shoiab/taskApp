@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -95,7 +96,7 @@ public class TagController {
 	}
 	
 	@RequestMapping(value= "/getAllUsers", method = RequestMethod.GET)
-	public @ResponseBody SolrDocumentList getAllUsers(
+	public @ResponseBody JSONObject getAllUsers(
 			@RequestHeader(value = "auth_key") String auth_key)
 			throws NoSuchAlgorithmException, SolrServerException, IOException {
 		
@@ -108,8 +109,8 @@ public class TagController {
 
 		HttpEntity<String> request = new HttpEntity<String>(headers);
 		
-		HttpEntity<SolrDocumentList> statusobj = restTemplate
-				.exchange(url, HttpMethod.GET, request, SolrDocumentList.class);
+		HttpEntity<JSONObject> statusobj = restTemplate
+				.exchange(url, HttpMethod.GET, request, JSONObject.class);
 		
 		return statusobj.getBody();	
 	}

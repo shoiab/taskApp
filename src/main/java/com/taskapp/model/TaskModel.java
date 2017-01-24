@@ -72,10 +72,12 @@ public class TaskModel {
 		this.taskCreationDate = taskCreationDate;
 	}
 
+	@JsonIgnore
 	public String getStartDate() {
 		return startDate;
 	}
 
+	@JsonIgnore
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}

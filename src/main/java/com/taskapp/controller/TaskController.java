@@ -37,13 +37,13 @@ public class TaskController {
 	@Inject
 	private RestTemplate restTemplate;
 
-	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
+	@RequestMapping(value = "/createNewTask", method = RequestMethod.POST)
 	public @ResponseBody JSONObject createTask(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestBody TaskModel taskModel) throws NoSuchAlgorithmException,
 			SolrServerException, IOException, URISyntaxException {
 
-		URI url = new URI("http://localhost:8087/api/task/createTask");
+		URI url = new URI("http://localhost:8087/api/task/createNewTask");
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		headers.add("auth_key", auth_key);
 		headers.add("Content-Type", "application/json");
@@ -60,7 +60,7 @@ public class TaskController {
 
 	}
 
-	@RequestMapping(value = "/postTask", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/postTask", method = RequestMethod.GET)
 	public @ResponseBody JSONObject notifyTask(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestParam(value = "taskid") String taskid)
@@ -83,7 +83,7 @@ public class TaskController {
 				.build().toUri(), HttpMethod.GET, request, JSONObject.class);
 
 		return statusobj.getBody();
-	}
+	}*/
 
 	@RequestMapping(value = "/getUserTasks", method = RequestMethod.POST)
 	public @ResponseBody SolrDocumentList getMyTasks(
@@ -131,7 +131,7 @@ public class TaskController {
 		
 	}*/
 	
-	@RequestMapping(value = "/getAssignedTasksForStatus", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/getAssignedTasksForStatus", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getAssignedTasksForStatus(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestHeader(value = "taskStatus") String taskStatus) throws NoSuchAlgorithmException,
@@ -153,9 +153,9 @@ public class TaskController {
 				JSONObject.class);
 
 		return statusobj;
-	}
+	}*/
 	
-	@RequestMapping(value = "/getTasksForStatus", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/getTasksForStatus", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getMyTasksForStatus(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestHeader(value = "taskStatus") String taskStatus) throws NoSuchAlgorithmException,
@@ -177,7 +177,7 @@ public class TaskController {
 				JSONObject.class);
 
 		return statusobj;
-	}
+	}*/
 	
 	@RequestMapping(value = "/changeTaskStatus", method = RequestMethod.POST)
 	public @ResponseBody JSONObject changeTaskStatus(
@@ -226,5 +226,31 @@ public class TaskController {
 
 		return statusobj;
 	}*/
+	
+	@RequestMapping(value = "/getTaskCount/v2", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getTasksCountv2(
+			@RequestHeader(value = "auth_key") String auth_key) throws NoSuchAlgorithmException,
+			SolrServerException, IOException {
+		
+		String url = "http://localhost:8087/api/task/getTaskCount/v2";
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		headers.add("auth_key", auth_key);
+		
+		restTemplate.getMessageConverters().add(
+				new MappingJackson2HttpMessageConverter());
+
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		//JSONObject statusobj = new JSONObject();
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+
+	/*	statusobj = restTemplate.postForObject(url, request,
+				JSONObject.class);*/
+		ResponseEntity<JSONObject> statusobj = restTemplate.exchange(builder
+				.build().toUri(), HttpMethod.GET, request, JSONObject.class);
+
+		return statusobj.getBody();
+	}
 
 }
