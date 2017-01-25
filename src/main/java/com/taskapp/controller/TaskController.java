@@ -179,7 +179,7 @@ public class TaskController {
 		return statusobj;
 	}*/
 	
-	@RequestMapping(value = "/changeTaskStatus", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/changeTaskStatus", method = RequestMethod.POST)
 	public @ResponseBody JSONObject changeTaskStatus(
 			@RequestHeader(value = "auth_key") String auth_key,
 			@RequestHeader(value = "taskId") String taskId,
@@ -203,7 +203,7 @@ public class TaskController {
 				JSONObject.class);
 
 		return statusobj;
-	}
+	}*/
 	
 	/*@RequestMapping(value = "/getCompletedTasks", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getCompletedTasks(
